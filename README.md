@@ -14,4 +14,4 @@ This project is a chess game implemented in Python using Minimax AI with α-β p
 --- 
 
 ## AI
-- [ ]
+
