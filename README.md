@@ -6,10 +6,11 @@ This project is a chess game implemented in Python using Minimax AI with α-β p
 ## Interface
 
 
-- [ ] Maybe A better color combo?
-- [ ] Render Pieces.
+- [x] Maybe A better color combo?
+- [x] Render Pieces.
+- [x] Sidebar 
+- [x] Display message a Stalemate Checkmate and Draw positions.
 - [ ] Create CommandLine Playability for testing purposes.
-- [ ] Display message a Stalemate Checkmate and Draw positions.
 
 --- 
 

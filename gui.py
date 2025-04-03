@@ -5,9 +5,9 @@ from game import process_move
 
 
 # CONSTANTS 
-W, H = 1000, 1000 # Width, Height
-cell_size = W//8 # Cell Size
-
+W, H = 800, 600 # Width, Height
+cell_size = H//8 # Cell Size
+sidebar_size = W - H
 cur_cell = None # Current Cell
 
 # pygame
@@ -26,6 +26,29 @@ def draw_board():
             rect = pg.Rect(r*cell_size, c*cell_size, cell_size, cell_size)
             pg.draw.rect(scr, color, rect)
 
+            # Debugging: Show grid coordinates
+            font = pg.font.Font(None, 20)
+            text = font.render(f"{c},{r}", True, (255, 0, 0))
+            scr.blit(text, rect.topleft)
+
+
+    # Draw Sidebar
+    sidebar = pg.Rect(H, 0, sidebar_size, H)
+    pg.draw.rect(scr, pg.color.THECOLORS["gray"], sidebar)
+
+
+def draw_sidebar(scr, move_hist):
+    sidebar = pg.Rect(H, 0, sidebar_size, H)
+    pg.draw.rect(scr, pg.color.THECOLORS["gray"], sidebar)
+
+    # Draw Title
+    title_surf = font.render("Move History", True, pg.color.THECOLORS["black"])
+    scr.blit(title_surf, (H + 20, 20))
+
+    # Display last 10 moves
+    for i, move in enumerate(move_hist[-10:]):
+        move_surf = font.render(f"{i+1}. {move}", True, pg.color.THECOLORS["black"])
+        scr.blit(move_surf, (H + 20, 50 + (i * 30)))
 
 # convert click to cell
 def click_to_cell(coords): # coordinates as tuple
@@ -47,6 +70,7 @@ def draw_pieces(screen, board, cell_size):
 
             filename = f"{color}-{piece}"
             pieces[name] = pg.image.load("assets/"+filename+".png")
+            pieces[name] = pg.transform.smoothscale(pieces[name], (cell_size - 10, cell_size-10))
 
     # Render Pieces
     for cell in ch.SQUARES:
@@ -54,16 +78,45 @@ def draw_pieces(screen, board, cell_size):
         if piece:
             c, r = ch.square_file(cell), 7 - ch.square_rank(cell)
             piece_name = f"{'white' if piece.color == ch.WHITE else 'black'}-"+piece.symbol().lower()
-            screen.blit(pieces[piece_name], (c * cell_size , r * cell_size ))
 
+            # Calculate position to center piece
+            piece_x = (c * cell_size) + (cell_size - pieces[piece_name].get_width()) // 2
+            piece_y = (r * cell_size) + (cell_size - pieces[piece_name].get_height()) // 2
+
+            screen.blit(pieces[piece_name], (piece_x, piece_y))
+
+
+def display_message(scr, mess, font_size=28):
+    font = pg.font.Font(None, font_size)  # Default system font
+    text_surface = font.render(mess, True, pg.color.THECOLORS["blue"])  # White text
+    text_rect = text_surface.get_rect(center=(H + sidebar_size // 2, H - (H//6)))  # Center in sidebar
+    scr.blit(text_surface, text_rect)
 
 def main():
     global cur_cell
+    global font
     is_running = True
     board = ch.Board() # Chess board
+
+    # history
+    move_hist = []
+    font = pg.font.Font(None, 24) # font
     while is_running:
         draw_board()
         draw_pieces(scr, board, cell_size)
+        draw_sidebar(scr,move_hist)
+        if board.is_checkmate():
+            display_message(scr, "Checkmate!")
+        elif board.is_stalemate():
+            display_message(scr, "Stalemate!")
+        elif board.is_insufficient_material():
+            display_message(scr, "Draw!")
+        elif board.is_seventyfive_moves():
+            display_message(scr, "Draw!")
+        elif board.is_fivefold_repetition():
+            display_message(scr, "Draw!")
+        elif board.is_variant_draw():
+            display_message(scr, "Draw!")
 
         for ev in pg.event.get():
             if ev.type == pg.QUIT:
@@ -72,13 +125,17 @@ def main():
                 cell = click_to_cell(ev.pos)
 
                 if cur_cell is None:
-                    cur_cell = cell
+                    piece = board.piece_at(cell)
+                    if piece and piece.color == board.turn: # Make sure it is the correct turn
+                        cur_cell = cell
+
                 else:
                     move = ch.Move(cur_cell, cell)
-                    process_move(board,move)
+                    process_move(board,move, move_hist)
 
                     cur_cell = None # reset move
-                print(board)
+
+                #print(board)
 
         pg.display.flip()
 
