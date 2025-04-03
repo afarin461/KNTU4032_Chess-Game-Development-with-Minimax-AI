@@ -19,7 +19,7 @@ scr = pg.display.set_mode((W,H)) # screen
 def draw_board():
     for r in range(8):
         for c in range(8):
-            color = pg.color.THECOLORS['white'] if (r%2)==(c%2) else pg.color.THECOLORS["azure4"]
+            color = pg.color.THECOLORS['white'] if (r%2)==(c%2) else pg.color.THECOLORS["teal"]
             # CHECK COLORS
             #print(f"({r},{c})",color) 
 
