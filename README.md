@@ -23,6 +23,36 @@ run `gui.py` to run the game :
 ``` bash
 python gui.py
 ```
+
+
+# GUI
+
+The GUI is Implemented using pygame.
+
+There is a sidebar that shows 
+
+    - Game history with the 10 recent moves played
+    - When AI is making decision
+    - Final Outcome of game
+
+Upon choosing a white piece the legal moves are displayed by a transparent yellow layer behind them and the selected piece will be blue.
+
+when a king is in check it will have a transparent red highlight.
+
+# CommandLine
+
+It is basically the same thing as gui but without graphics to speed things up.
+
+It is implemented using a class to make testing faster and more robust.
+
+Is contained in `cmdln.py` and uses the same logic and mostly the same code as `gui.py`
+
+
+# Test
+`test.py` is a file that is basically a compiled list of all edge cases and middle and end game scenarios to test the AI against.
+
+There are 20 testcases and all tests have passed.
+
 # TODO
 
 ### Interface
@@ -39,9 +69,11 @@ python gui.py
     - [x] pawn promotion window for player
     - [x] AI always promotes to queen
 - [x] integration with AI
-- [ ] Create CommandLine Playability for testing purposes.
-    - [ ] create tests that make sure checkmate is prioritized against stalemate
-    - [ ] create tests for other edge case scenarios
+- [x] Create CommandLine Playability for testing purposes.
+    - [x] create tests that make sure checkmate is prioritized against stalemate
+    - [x] create tests for other edge case scenarios
+
+- [ ] add game timer
 
 --- 
 
