@@ -73,7 +73,9 @@ There are 20 testcases and all tests have passed.
     - [x] create tests that make sure checkmate is prioritized against stalemate
     - [x] create tests for other edge case scenarios
 
-- [ ] add game timer
+- [ ] add game timer.
+- [ ] add 1-8 and a-g to rows and columns.
+- [ ] stop white from making moves once game is ended.
 
 --- 
 
