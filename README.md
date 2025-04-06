@@ -53,6 +53,13 @@ Is contained in `cmdln.py` and uses the same logic and mostly the same code as `
 
 There are 20 testcases and all tests have passed.
 
+`test_performance.py` tests against performance in each depth up to 4.
+
+# simulate
+
+Simulates the AI against itself in different depths,
+results can be found at `self_play_results`
+
 # TODO
 
 ### Interface
@@ -73,6 +80,9 @@ There are 20 testcases and all tests have passed.
 - [x] integration with AI
 - [x] Create CommandLine Playability for testing purposes.
     - [x] create tests that make sure checkmate is prioritized against stalemate
+        - [x] create test_performance.py and test.py for performance and overall testing.
+    - [x] Add simulate.py to simulate ai against itself in different depths.
+        - [x] add self_play_results
     - [x] create tests for other edge case scenarios
 - [x] add 1-8 and a-g to rows and columns.
 - [x] stop white from making moves once game is ended.
