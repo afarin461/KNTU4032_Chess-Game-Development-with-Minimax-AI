@@ -1,6 +1,7 @@
 import pygame as pg
 import chess as ch
 import chess.engine as en
+import time
 from game import process_move
 from game import check_endgame
 from game import isKingCheck
@@ -8,7 +9,7 @@ from ai_interface import get_move
 
 
 # CONSTANTS 
-W, H = 800, 600 # Width, Height
+W, H = 860, 640 # Width, Height
 cell_size = H//8 # Cell Size
 sidebar_size = W - H
 cur_cell = None # Current Cell
@@ -20,6 +21,8 @@ scr = pg.display.set_mode((W,H)) # screen
 
 # DRAW THE CHESS BOARD
 def draw_board(highlight=[], king_check_cells=[]):
+    font_labels = pg.font.Font(None, 20)
+
     for r in range(8):
         for c in range(8):
             square = ch.square(r, 7-c)
@@ -29,6 +32,16 @@ def draw_board(highlight=[], king_check_cells=[]):
 
             rect = pg.Rect(r*cell_size, c*cell_size, cell_size, cell_size)
             pg.draw.rect(scr, color, rect)
+
+            # Draw file labels (a-h) at bottom
+            if c == 7:
+                label = font_labels.render(chr(ord('a') + r), True, pg.color.THECOLORS["black"])
+                scr.blit(label, (r * cell_size + cell_size // 2 - 6, H - 15))
+
+            # Draw rank labels (1-8) at left
+            if r == 0:
+                label = font_labels.render(str(8 - c), True, pg.color.THECOLORS["black"])
+                scr.blit(label, (4, c * cell_size + cell_size // 2 - 10))
 
             # Debugging: Show grid coordinates
             #font = pg.font.Font(None, 20)
@@ -214,6 +227,8 @@ def handle_promotion(board, move):
 
 def main():
     global cur_cell, font
+    start_time = time.time()
+
     is_running = True
     board = ch.Board() # Chess board
 
@@ -221,7 +236,7 @@ def main():
     move_hist = []
     font = pg.font.Font(None, 24) # font
     highlight = []
-    celle=[]
+
     while is_running:
         # Check if any king is in check
         king_check_cells = isKingCheck(board)
@@ -237,7 +252,7 @@ def main():
             if ev.type == pg.QUIT:
                 is_running = False
 
-            if ev.type == pg.MOUSEBUTTONDOWN and board.turn: # Convert Click to cell here once a click is detected and is white's turn
+            if ev.type == pg.MOUSEBUTTONDOWN and board.turn and not board.is_game_over(): # Convert Click to cell here once a click is detected and is white's turn
                 cell = click_to_cell(ev.pos)
 
                 if cur_cell is None:
