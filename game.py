@@ -3,27 +3,38 @@ import chess as ch
 def process_move(board,move, move_hist):
     if move in board.legal_moves:
         board.push(move)
-        move_hist.append(move)
+        #move_hist.append(move)
 
-        if len(move_hist) > 10:
-            move_hist.pop(0)
+        #if len(move_hist) > 10:
+            #move_hist.pop(0)
+
+        return True
     else:
         print("Invalid Move!!!! ------------------- ")
+        return False
 
 
 def check_endgame(board, scr, display_message):
         if board.is_checkmate():
             display_message(scr, "Checkmate!")
+            return True
         elif board.is_stalemate():
             display_message(scr, "Stalemate!")
+            return True
         elif board.is_insufficient_material():
             display_message(scr, "Draw!")
+            return True
         elif board.is_seventyfive_moves():
             display_message(scr, "Draw!")
+            return True
         elif board.is_fivefold_repetition():
             display_message(scr, "Draw!")
+            return True
         elif board.is_variant_draw():
             display_message(scr, "Draw!")
+            return True
+
+        return False
 
 
 def isKingCheck(board):

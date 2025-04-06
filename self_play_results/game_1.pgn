@@ -1,0 +1,10 @@
+[Event "Self-play Simulation 1"]
+[Site "?"]
+[Date "2025.04.06"]
+[Round "?"]
+[White "AI_Depth_1"]
+[Black "AI_Depth_1"]
+[Result "0-1"]
+[Termination "CHECKMATE"]
+
+1. Nh3 e5 2. f4 Qh4+ 3. Nf2 Qxf2+ 4. Kxf2 Bc5+ 5. Ke1 Bf2+ 6. Kxf2 d5 7. Ke1 Nf6 8. Kf2 Ne4+ 9. Ke1 Nc6 10. Na3 Nd4 11. Rg1 Nxc2+ 12. Nxc2 Bg4 13. Rh1 Bxe2 14. Rg1 Bxd1 15. d3 Bxc2 16. Ke2 Bxd3+ 17. Kd1 Be2+ 18. Kc2 Bd3+ 19. Kd1 Be2+ 20. Kc2 Bd3+ 21. Kb3 Nc5+ 22. Kc3 d4+ 23. Kd2 Nb3+ 24. Kd1 Be2+ 25. Kc2 Nxa1+ 26. Kd2 Nb3+ 27. Kc2 Bd3+ 28. Kd1 Be2+ 29. Kc2 Bd3+ 30. Kd1 Be2+ 31. Ke1 Bxf1 32. Be3 Bxg2 33. Ke2 d3+ 34. Ke1 d2+ 35. Ke2 d1=Q+ 36. Kf2 Qxg1+ 37. Ke2 Qf1# 0-1

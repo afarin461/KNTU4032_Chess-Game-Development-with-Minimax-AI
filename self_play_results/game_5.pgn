@@ -1,0 +1,10 @@
+[Event "Self-play Simulation 5"]
+[Site "?"]
+[Date "2025.04.06"]
+[Round "?"]
+[White "AI_Depth_3"]
+[Black "AI_Depth_2"]
+[Result "0-1"]
+[Termination "CHECKMATE"]
+
+1. Nh3 e5 2. Rg1 d5 3. Na3 Nc6 4. f4 Qh4+ 5. g3 Qg4 6. Rg2 e4 7. Kf2 Bc5+ 8. d4 exd3+ 9. Be3 Bxe3+ 10. Ke1 Nge7 11. Qb1 dxe2 12. Rg1 exf1=Q+ 13. Kxf1 Qf3+ 14. Nf2 Qxf2# 0-1

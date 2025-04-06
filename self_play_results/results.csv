@@ -1,0 +1,6 @@
+game_id,white_depth,black_depth,result,termination,total_moves,total_time_sec,pgn_path
+1,1,1,0-1,CHECKMATE,38,2.66,self_play_results/game_1.pgn
+2,2,2,0-1,CHECKMATE,37,19.18,self_play_results/game_2.pgn
+3,3,3,0-1,CHECKMATE,18,122.67,self_play_results/game_3.pgn
+4,2,3,0-1,CHECKMATE,14,75.76,self_play_results/game_4.pgn
+5,3,2,0-1,CHECKMATE,15,35.76,self_play_results/game_5.pgn
