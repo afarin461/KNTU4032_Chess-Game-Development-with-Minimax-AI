@@ -96,11 +96,19 @@ def draw_sidebar(scr, board, move_hist):
     # Draw Title
     title_surf = font.render("Move History", True, pg.color.THECOLORS["black"])
     scr.blit(title_surf, (H + 20, 20))
-
+    
+    black_color = pg.color.THECOLORS["black"]
+    white_color = (100, 100, 100)  # soft gray tone
     # Display last 10 moves
-    for i, move in enumerate(move_hist[-10:]):
-        move_surf = font.render(f"{i+1}. {move}", True, pg.color.THECOLORS["black"])
-        scr.blit(move_surf, (H + 20, 50 + (i * 30)))
+    for i, (white_move, black_move) in enumerate(move_hist[-10:]):
+        y_offset = 50 + (i * 30)
+        move_number = font.render(f"{len(move_hist)-10+i+1 if len(move_hist) > 10 else i+1}.", True, pg.color.THECOLORS["black"])
+        white_surf = font.render(f"{white_move}", True, white_color)
+        black_surf = font.render(f"{black_move}", True, black_color)
+
+        scr.blit(white_surf, (H + 50, y_offset))
+        scr.blit(black_surf, (H + 130, y_offset))
+        scr.blit(move_number, (H + 20, y_offset))
 
     #turn_indic = font.render(f"{"White" if board.turn else "Black"}'s Turn", True, pg.color.THECOLORS["black"])
     #scr.blit(turn_indic, (H + (sidebar_size // 2) - 50, H - 20))
@@ -245,7 +253,9 @@ def main():
     board = ch.Board() # Chess board
 
     # history
-    move_hist = []
+    move_hist = []  # each element is a tuple (white_move, black_move)
+    pending_white_move = None
+
     font = pg.font.Font(None, 24) # font
     highlight = []
     ai_move_highlight = []  # Highlight for AI moves
@@ -298,14 +308,15 @@ def main():
                             if (piece.color == ch.WHITE and to_rank == 7) or (piece.color == ch.BLACK and to_rank == 0):
                                 move = handle_promotion(board, move)
 
-                    process_move(board,move, move_hist)
+                    if process_move(board,move, move_hist):
+                        pending_white_move = move
 
                         # Check for promotion
-                    if board.piece_at(cur_cell) and board.piece_at(cur_cell).piece_type == ch.PAWN:
-                        move = handle_promotion(board, move)
+                        if board.piece_at(cur_cell) and board.piece_at(cur_cell).piece_type == ch.PAWN:
+                            move = handle_promotion(board, move)
 
-                    cur_cell = None # reset move
-                    highlight = []
+                        cur_cell = None # reset move
+                        highlight = []
 
         if not board.turn: # If AI turn, Move AI using minimax
             print("AI's Turn!---------")
@@ -325,6 +336,13 @@ def main():
                     opp_move = ch.Move(opp_move.from_square, opp_move.to_square, promotion=ch.QUEEN)
 
             board.push(opp_move)
+
+            if pending_white_move is not None:
+                move_hist.append((pending_white_move, opp_move))
+                pending_white_move = None
+            else:
+                move_hist.append(("-"), opp_move)
+
 
 
         pg.display.flip()
