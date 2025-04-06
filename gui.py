@@ -20,7 +20,7 @@ scr = pg.display.set_mode((W,H)) # screen
 
 
 # DRAW THE CHESS BOARD
-def draw_board(highlight=[], king_check_cells=[]):
+def draw_board(highlight=[], king_check_cells=[], ai_highlight=[]):
     font_labels = pg.font.Font(None, 20)
 
     for r in range(8):
@@ -61,6 +61,18 @@ def draw_board(highlight=[], king_check_cells=[]):
     for square in highlight:
         c, r = ch.square_file(square), 7 - ch.square_rank(square)
         scr.blit(highlight_surf, (c * cell_size, r * cell_size))  # Overlay highlight
+
+    # Draw transparent highlights
+    for square in highlight:
+        c, r = ch.square_file(square), 7 - ch.square_rank(square)
+        scr.blit(highlight_surf, (c * cell_size, r * cell_size))  # Overlay highlight
+
+    # Highlight AI's move (in green)
+    ai_highlight_surf = pg.Surface((cell_size, cell_size), pg.SRCALPHA)
+    ai_highlight_surf.fill((0, 255, 0, 120))  # Transparent green
+    for square in ai_highlight:
+        c, r = ch.square_file(square), 7 - ch.square_rank(square)
+        scr.blit(ai_highlight_surf, (c * cell_size, r * cell_size))
 
     # Draw transparent red highlights for kings in check
     red_highlight_surf = pg.Surface((cell_size, cell_size), pg.SRCALPHA)  # Transparent red
@@ -236,17 +248,22 @@ def main():
     move_hist = []
     font = pg.font.Font(None, 24) # font
     highlight = []
+    ai_move_highlight = []  # Highlight for AI moves
 
     while is_running:
         # Check if any king is in check
         king_check_cells = isKingCheck(board)
 
-        draw_board(highlight, king_check_cells)
+        draw_board(highlight, king_check_cells, ai_move_highlight)
         draw_pieces(scr, board, cell_size)
         draw_sidebar(scr,board, move_hist)
 
         # Check if checkmate, stalemate or draw
-        check_endgame(board,scr, display_message)
+        if check_endgame(board, scr, display_message):
+            pg.display.flip()  # Make sure message shows
+            time.sleep(4)      # Pause to show message
+            is_running = False
+            continue           # Skip remaining loop steps
 
         for ev in pg.event.get():
             if ev.type == pg.QUIT:
@@ -298,6 +315,7 @@ def main():
             pg.display.flip()
 
             opp_move = get_move(board)
+            ai_move_highlight = [opp_move.from_square, opp_move.to_square]
 
             # Check if AI is promoting a pawn
             if board.piece_at(opp_move.from_square) and board.piece_at(opp_move.from_square).piece_type == ch.PAWN:
