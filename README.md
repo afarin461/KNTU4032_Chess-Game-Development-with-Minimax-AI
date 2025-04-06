@@ -63,8 +63,10 @@ There are 20 testcases and all tests have passed.
     - [x] Game history
     - [x] AI thinking message
     - [x] Display message a Stalemate Checkmate and Draw positions.
-- [x] add legal move highlight
-- [x] add king is in check highlight
+- [x] piece highlights
+    - [x] add legal move highlight
+    - [x] add king is in check highlight
+    - [x] add opponent from and to cell highlight after each move
 - [x] add pawn promotion
     - [x] pawn promotion window for player
     - [x] AI always promotes to queen
