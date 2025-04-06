@@ -1,14 +1,16 @@
 import chess as ch
-from ai_interface import get_move
+from ai.minimax import find_best_move
+import argparse
 
 class CommandLineChess:
 
     #  initialize the command line chess game.
     #Can start with a custom board state for testing purposes.
-    def __init__(self, initial_board=None):
+    def __init__(self, initial_board=None, depth=3):
         self.board = ch.Board(initial_board) if initial_board else ch.Board()
         self.move_history = []
         self.game_over = False
+        self.depth = depth
 
     def print_board(self):
         #Print the current board state in a readable format.
@@ -78,7 +80,7 @@ class CommandLineChess:
     # Process the AI move using the same minimax algorithm as the GUI version.
     def process_ai_move(self):
         print("\nAI is thinking...")
-        ai_move = get_move(self.board)
+        ai_move = find_best_move(self.board, self.depth)
 
         # Handle pawn promotion (AI always promotes to queen)
         piece = self.board.piece_at(ai_move.from_square)
@@ -120,9 +122,9 @@ class CommandLineChess:
 #fen_string: FEN notation of the starting position
 #moves_to_test: List of moves to test (in UCI format)
 
-def test_from_position(fen_string, moves_to_test=None):
+def test_from_position(fen_string, moves_to_test=None, depth=3):
     print(f"\nStarting test from position:\n{fen_string}")
-    game = CommandLineChess(fen_string)
+    game = CommandLineChess(fen_string, depth=depth)
     game.print_game_state()
     
     if moves_to_test:
@@ -144,5 +146,9 @@ def test_from_position(fen_string, moves_to_test=None):
                     break
 
 # Start a normal game
-game = CommandLineChess()
-game.run_game_loop()
+parser = argparse.ArgumentParser(description="Play Command Line Chess with Minimax AI.")
+parser.add_argument('--depth', type=int, default=3, help="Minimax search depth for the AI")
+args = parser.parse_args()
+
+#game = CommandLineChess()
+#game.run_game_loop()

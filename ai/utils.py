@@ -18,8 +18,6 @@ def move_score(board, move):
     if board.gives_check(move):
         score += 1  # Small bonus for giving check
 
-    # Later: Add promotion bonuses, killer moves, history heuristics, etc.
-    
     return score
 
 def piece_value(piece_type):

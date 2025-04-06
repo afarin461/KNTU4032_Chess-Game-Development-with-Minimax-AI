@@ -5,7 +5,7 @@ import time
 from game import process_move
 from game import check_endgame
 from game import isKingCheck
-from ai_interface import get_move
+from ai.minimax import find_best_move
 
 
 # CONSTANTS 
@@ -13,6 +13,7 @@ W, H = 860, 640 # Width, Height
 cell_size = H//8 # Cell Size
 sidebar_size = W - H
 cur_cell = None # Current Cell
+depth = 3 # minimax depth
 
 # pygame
 pg.init()
@@ -149,7 +150,7 @@ def draw_pieces(screen, board, cell_size):
             screen.blit(pieces[piece_name], (piece_x, piece_y))
 
 
-def display_message(scr, mess, font_size=22, color="blue"):
+def display_message(scr, mess, font_size=28, color="blue"):
     font = pg.font.Font(None, font_size)  # Default system font
     text_surface = font.render(mess, True, pg.color.THECOLORS[color])  # defaults to blue text for announcing sth
     text_rect = text_surface.get_rect(center=(H + sidebar_size // 2, H - (H//6))) # Somewhere below history in side bar space
@@ -308,15 +309,19 @@ def main():
                             if (piece.color == ch.WHITE and to_rank == 7) or (piece.color == ch.BLACK and to_rank == 0):
                                 move = handle_promotion(board, move)
 
-                    if process_move(board,move, move_hist):
+                    if move in board.legal_moves:
+                        board.push(move)
                         pending_white_move = move
 
                         # Check for promotion
                         if board.piece_at(cur_cell) and board.piece_at(cur_cell).piece_type == ch.PAWN:
                             move = handle_promotion(board, move)
 
-                        cur_cell = None # reset move
-                        highlight = []
+                    else:
+                        print("Invalid Move!!!! --------------- ")
+
+                    cur_cell = None # reset move
+                    highlight = []
 
         if not board.turn: # If AI turn, Move AI using minimax
             print("AI's Turn!---------")
@@ -325,7 +330,7 @@ def main():
             display_message(scr, "AI THINKING!", 22, "red")
             pg.display.flip()
 
-            opp_move = get_move(board)
+            opp_move = find_best_move(board,depth)
             ai_move_highlight = [opp_move.from_square, opp_move.to_square]
 
             # Check if AI is promoting a pawn
