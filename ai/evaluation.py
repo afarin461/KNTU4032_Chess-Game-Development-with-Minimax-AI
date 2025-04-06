@@ -94,8 +94,8 @@ piece_tables = {
 
 
 # Some constant to help favor checkmate or mate over stalemate and draw
-mateScore = 50
-nearMate = 25
+mateScore = 30
+nearMate = 12
 drawScore = -2 # penalty for draw
 
 def evaluate(board):
