@@ -2,6 +2,7 @@ import chess as ch
 from ai.utils import count_doubled_pawns
 from ai.utils import count_isolated_pawns
 from ai.utils import count_passed_pawns
+from ai.utils import can_checkmate_in_one
 
 material_values = {
     ch.PAWN: 1 * 0.2,
@@ -92,8 +93,34 @@ piece_tables = {
 }
 
 
+# Some constant to help favor checkmate or mate over stalemate and draw
+mateScore = 50
+nearMate = 25
+drawScore = -2 # penalty for draw
 
 def evaluate(board):
+
+     # Black wins
+    if board.is_checkmate() and board.turn == ch.WHITE:
+        return mateScore
+    # White wins
+    elif board.is_checkmate() and board.turn == ch.BLACK:
+        return -mateScore
+    # Stalemate/draw - generally bad for black
+    elif board.is_stalemate() or board.is_insufficient_material() or board.is_fifty_moves() or board.is_repetition():
+        # In general, a draw is slightly favorable for white (human) vs AI 
+        #give negative score to draws
+        return drawScore
+
+    # Check for mate in one possibilities
+    if not board.is_game_over():
+        # If black has checkmate in one, give a high score
+        if can_checkmate_in_one(board, ch.BLACK):
+            return nearMate
+        # If white can checkmate in one, give a ver low score
+        if can_checkmate_in_one(board, ch.WHITE):
+            return -nearMate
+
 
     score = 0.0
 
@@ -104,9 +131,35 @@ def evaluate(board):
     score += evaluate_pawn_structure(board) * 0.2
     score += evaluate_mobility(board) * 0.2
     score += evaluate_king(board) * 0.2
+    score += evaluate_check(board) * 0.5
 
     # Initiative bonus
     score += 5 if board.turn == ch.WHITE else -5
+
+    return score
+
+
+# Evaluate potential for creating check
+def evaluate_check(board):
+    score = 0.0
+
+    # Store current turn
+    original_turn = board.turn
+
+    # Evaluate check by Black
+    board.turn = ch.BLACK
+    black_check_moves = sum(1 for move in board.legal_moves if board.gives_check(move))
+
+    # Evaluate check threats by White (human)
+    board.turn = ch.WHITE
+    white_check_moves = sum(1 for move in board.legal_moves if board.gives_check(move))
+
+    # Restore original turn
+    board.turn = original_turn
+
+    # Score based on checking potential
+    check_score = (black_check_moves - white_check_moves) * 0.2
+    score += check_score
 
     return score
 
@@ -224,6 +277,13 @@ def evaluate_king(board):
     # Penalize open files near kings (negative for white, positive for black)
     score += w_king_open_files * 0.3
     score -= b_king_open_files * 0.3
+
+    # Check for direct attacks on king
+    if board.is_check():
+        if board.turn == ch.WHITE:
+            score += 0.5  # Good for black if white king is in check
+        else:
+            score -= 0.5  # Bad for black if black king is in check
 
 
     return score

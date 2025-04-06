@@ -101,3 +101,20 @@ def count_passed_pawns(board, pawns, color):
 
     return passed_count
 
+# Check if a side can deliver checkmate in one move
+def can_checkmate_in_one(board, color):
+    original_turn = board.turn
+    board.turn = color
+    
+    # Only check a limited number of moves for performance
+    for move in list(board.legal_moves)[:15]:  # Check first 15 moves
+        if board.gives_check(move):
+            board.push(move)
+            is_mate = board.is_checkmate()
+            board.pop()
+            if is_mate:
+                board.turn = original_turn
+                return True
+    
+    board.turn = original_turn
+    return False
