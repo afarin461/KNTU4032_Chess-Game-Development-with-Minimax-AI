@@ -323,7 +323,7 @@ def main():
                     cur_cell = None # reset move
                     highlight = []
 
-        if not board.turn: # If AI turn, Move AI using minimax
+        if not board.turn and not board.is_game_over(): # If AI turn, Move AI using minimax
             print("AI's Turn!---------")
 
             # GUI HUI TO SHOW AI IS THINKING , BECAUSE WHO WOULD HAVE THOUGHT AI TAKES TIMMME
