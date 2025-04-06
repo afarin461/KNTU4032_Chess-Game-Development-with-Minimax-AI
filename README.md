@@ -1,9 +1,31 @@
 # KNTU4032_Chess-Game-Development-with-Minimax-AI
 This project is a chess game implemented in Python using Minimax AI with α-β pruning. The game features an interactive GUI built with Pygame and integrates the python-chess library for move validation and game logic.
 
+
+
+# How to run 
+
+Simply Clone the repository and go to the repo directory.
+
+```
+git clone https://github.com/afarin461/KNTU4032_Chess-Game-Development-with-Minimax-AI/
+cd KNTU4032_Chess-Game-Development-with-Minimax-AI/
+```
+
+create a virtual environment ( if necessary ) and run 
+
+``` bash
+pip install -r requirements.txt
+```
+
+run `gui.py` to run the game : 
+
+``` bash
+python gui.py
+```
 # TODO
 
-## Interface
+### Interface
 
 - [x] Maybe A better color combo?
 - [x] Render Pieces.
@@ -23,10 +45,10 @@ This project is a chess game implemented in Python using Minimax AI with α-β p
 
 --- 
 
-## AI
+### AI
 
 - [x] minimax ai
-    - [x]added alpha beta pruning
+    - [x] added alpha beta pruning
 
 - [x] evaluation function for minimax
     - [x] material counting
@@ -35,4 +57,5 @@ This project is a chess game implemented in Python using Minimax AI with α-β p
     - [x] pawn structure
     - [x] double bishop
     - [x] king safety methods
+    - [x] make check / checkmate more favorable than draw/stalemate.
 
